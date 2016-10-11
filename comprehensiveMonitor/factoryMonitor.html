@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../css/laydate.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/laydateskins.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/highcharts.js"></script>
+    <script type="text/javascript" src="../js/laydate.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/factoryMonitor.js"></script>
+</head>
+<style>
+    .bg{
+        background-image:url(../images/login.png);
+        background-repeat:no-repeat;
+        background-position:center top;
+        background-size:cover;
+        /*background: rgba(255,255,255, 0.3);*/
+        /*filter:alpha(opacity=80);  /!*支持 IE 浏览器*!/*/
+        /*-moz-opacity:0.80; /!*支持 FireFox 浏览器*!/*/
+        opacity:0.70;  /*支持 Chrome, Opera, Safari 等浏览器*/
+    }
+    .bg,.monitor{
+        width: 100%;
+        position: absolute;
+        top:40px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        padding: 0px;
+    }
+    .sortable{
+        min-width: 300px;
+        max-width: 500px;
+        background-color: white;
+        /*width: 100%;*/
+    }
+</style>
+
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="indicatorList.html">综合监测</a></li>
+        <li><a href="#" id="currentPageTitle">厂区监测</a></li>
+    </ul>
+</div>
+<div class="right">
+    <div class="bg" style="background-image: url('../images/login.png')"></div>
+    <table style="z-index: 10;height: 100%;top: 0px;" class="monitor">
+        <tr>
+            <td>
+                <label>污泥库房余量：</label>
+                <label id="mudNowStock" style="color: red;font-size: 20px;top:10px;">0吨</label>
+                <div id="usual1" class="usual">
+                    <div class="itab" style="border-bottom: 0px;">
+                        <ul>
+                            <li ><a href="#mudtab1" class="selected" id="mudin">接收</a></li>
+                            <li ><a href="#mudtab2" id="mudout">消耗</a></li>
+                            <li ><a href="#mudtab3" id="mudsurplus">余量</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="mudtab1">
+                        <table class="tablelist mudTable sortable"
+                               style="float: left;top:0px;">
+                            <tbody>
+                            <!--<tr>-->
+                            <!--<td><label class="formDes">昨日</label><label id="dayIndataTotal" class='showNum'> 0 吨</label></td>-->
+                            <!--<td><label class="formDes">前日</label><label id="dayOutdataTotal" class='showNum'> 0 吨</label></td>-->
+                            <!--<td>-->
+                            <!--<label class="formDes">趋势</label>-->
+                            <!--<img src="../images/downArrow.png" id="daymudIcon" class="iconArrow" style="padding-top: 10px">-->
+                            <!--<div id="daySurplus" style="float: right;text-align: right"><label> 0 吨</label><label> 20%</label></div></td>-->
+                            <!--</tr>-->
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthIndataTotal'></label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearIndataTotal'></label></td>
+                                <td><label class="formDes">上年同期</label><label  class='showNum yearOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="mudtab2" style="display: none">
+                        <table class="tablelist mudTable sortable"
+                               style="float: left;top:0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthIndataTotal'></label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearIndataTotal'></label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="mudtab3" style="display: none">
+                        <table class="tablelist mudTable sortable"
+                               style="float: left;top:0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthIndataTotal'></label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearIndataTotal'></label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearOutdataTotal'> </label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearmudIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div style="width: 80%;float: right;max-width: 500px;">
+                    <label>燃料棒库房余量：</label>
+                    <label id="fuelNowStock" style="color: red;font-size: 20px;">0吨</label>
+                </div>
+                <div id="usual2" class="usual" style="clear:both;float: right;width: 80%;max-width: 500px;">
+                    <div class="itab" style="border-bottom: 0px;">
+                        <ul>
+                            <li ><a href="#fueltab1" class="selected" id="fuelin">接收</a></li>
+                            <li ><a href="#fueltab2" id="fuelout">消耗</a></li>
+                            <li ><a href="#fueltab3" id="fuelsurplus">余量</a></li>
+                        </ul>
+                    </div>
+                    <div id="fueltab1" >
+                        <table class="tablelist sortable fuelTable"style="width:100%;float: right;top:0px;right: 0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthInfuelTotal'> </label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearInfuelTotal'> </label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="fueltab2" style="display: none">
+                        <table class="tablelist sortable fuelTable"style="width:100%;float: right;top:0px;right: 0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthInfuelTotal'> </label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearInfuelTotal'> </label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="fueltab3" style="display: none">
+                        <table class="tablelist sortable fuelTable"style="width:100%;float: right;top:0px;right: 0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthInfuelTotal'> </label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="monthfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="monthfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearInfuelTotal'> </label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearOutfuelTotal'></label></td>
+                                <td>
+                                    <img src="../images/downArrow.png" class="yearfuelIcon" class="iconArrow" style="padding-top: 10px">
+                                    <label class="yearfuelSurplus showNum"></label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr><tr>
+            <td>
+                <label>发电量：</label>
+                <label id="elNowStock" style="color: red;font-size: 20px;">0</label>
+                <div id="usual3" class="usual">
+                    <div class="itab" style="border-bottom: 0px;">
+                        <ul>
+                            <li ><a href="#tab1" class="selected" id="electric">发电量</a></li>
+                            <li ><a href="#tab2" id="wastwater">用水量</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="tab1">
+                        <table class="tablelist sortable"
+                               style="float: left;bottom: 0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthElecTotal'> 0 </label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthWaterTotal'> 0 </label></td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearElecTotal'> 0 </label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearWaterTotal'> 0 </label></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tab2" style="display: none">
+                        <table class="tablelist sortable"
+                               style="float: left;bottom: 0px;">
+                            <tbody>
+                            <tr>
+                                <td><label class="formDes">当月</label><label class='showNum monthElecTotal'> 0 </label></td>
+                                <td><label class="formDes">上月同期</label><label class='showNum monthWaterTotal'> 0 </label></td>
+                            </tr>
+                            <tr>
+                                <td><label class="formDes">当年</label><label class='showNum yearElecTotal'> 0 </label></td>
+                                <td><label class="formDes">上年同期</label><label class='showNum yearWaterTotal'> 0 </label></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </td>
+            <td>
+                <table style="float: right;">
+                    <caption style="background-color: white;">
+                        <div>
+                            <select class="searchType righttoolbar" id="emissionType">
+                                <option value="SO2">SO2</option>
+                                <option value="NOX">NOX</option>
+                                <option value="O2">O2</option>
+                                <option value="温度">温度</option>
+                                <option value="压力">压力</option>
+                                <option value="流量">流量</option>
+                                <option value="发电量">发电量</option>
+                                <option value="用水量">用水量</option>
+                            </select>
+                        </div>
+                    </caption>
+                    <tr>
+                        <td>
+                            <div id="so2monthcontainer" style=" width:500px;height:200px; margin: 0 auto;clear: both;"></div>
+                            <!--<div id="so2Lastmonthcontainer" style=" width: 200px;height:200px; margin: 0 auto;clear: both;"></div>-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!--alarm-->
+<div id="alarmWindow" title="报警信息" style="display: none">
+
+    <span>1、告警1</span>
+    <span>2、告警2</span>
+    <span>3、告警3</span>
+    <span>4、告警4</span>
+</div>
+<script type="text/javascript">
+    $("#usual1 ul").idTabs();
+    $("#usual2 ul").idTabs();
+    $("#usual3 ul").idTabs();
+</script>
+</body>
+
+</html>

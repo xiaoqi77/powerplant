@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../css/laydate.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/laydateskins.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <!--表的分页排序-->
+    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" src="../js/laydate.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/mudInImport.js"></script>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">电厂数据管理</a></li>
+        <li><a href="#">污泥入库数据导入</a></li>
+    </ul>
+</div>
+<div class="rightinfo">
+
+    <div class="tools">
+        <ul class="toolbar">
+            <li class="mudImport"><span><img src="../images/t01.min.png"/></span>污泥入库数据导入</li>
+        </ul>
+        <ul class="toolbar1">
+            <li>
+                <input placeholder="起始时间" class="scinput laydate-icon" id="starthour">
+                <input placeholder="结束时间" class="scinput laydate-icon" id="endhour">
+                <img class="searchpng" id="searchpng" src="../images/ico06.min.png"/>
+            </li>
+        </ul>
+        <br>
+    </div>
+    <div style="overflow: hidden;float: right;margin-right: 40px;">
+        <ul class="toolbar1">
+            <li><a href="#" class="tablelink">最近一周 |</a></li>
+            <li><a href="#" class="tablelink">最近一月 |</a></li>
+            <li><a href="#" class="tablelink">最近三月</a></li>
+        </ul>
+    </div>
+    <table class="tablelist deviceTable sortable" id="importTable">
+        <thead>
+        <!--<tr>-->
+        <th class="nosort" style="display: none"></th>
+        <th class="nosort" style='width: 4%'><input name="checkbox" id="checkAll" type="checkbox"/></th>
+        <th style='width: 6%'><h3>序号</h3><!--<span class="sortpng sortboth"></span><i class="sort"><img src="../images/arrows.png"/></i>--></th>
+        <th><h3>导入类型</h3></th>
+        <th><h3>时间</h3></th>
+        <th><h3>导入结果</h3></th>
+        <th><h3>操作人</h3></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="controls">
+        <div id="perpage">
+            <span>每页显示</span>
+            <select onchange="sorter.size(this.value)">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10" selected="selected">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <span>页</span>
+        </div>
+        <div id="navigation">
+            <img src="../images/first.gif" width="16" height="16" alt="首页" onclick="sorter.move(-1,true)" />
+            <img src="../images/previous.gif" width="16" height="16" alt="上一页" onclick="sorter.move(-1)" />
+            <img src="../images/next.gif" width="16" height="16" alt="下一页" onclick="sorter.move(1)" />
+            <img src="../images/last.gif" width="16" height="16" alt="末页" onclick="sorter.move(1,true)" />
+        </div>
+        <div id="text">第<span id="currentpage"></span> 页/共<span id="pagelimit"></span>页</div>
+    </div>
+</div>
+<!--mudImportWindow-->
+<div id="mudImportWindow" class="dialog" title="污泥入库数据导入" style="display: none">
+    <p class="validateTips">认真填写下面内容</p>
+    <form>
+        <fieldset>
+            <ul id="updateManualData">
+                <li>
+                    <label>选择文件<b>*</b></label>
+                    <input type="file" id="fileName"  accept="*.txt/*.xls/*.xlsx" style="display: none"/>
+                    <input type="text" class="dfinput" id="showFile" placeholder="浏览文件">
+                    <input type="button" id="browse" class="cancel"  value="浏览..."/>
+                    <!--<input type="button" id="importData" class="sure" value="导入"/>-->
+                </li>
+            </ul>
+            <div id="progressbar"><img src="../images/progressbar2.jpg"></div>
+            <!--<div id="progressbar"><div class="progress-label">Loading...</div></div>-->
+            <label id="confirmMsg" class="confirmMsg"> </label>
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

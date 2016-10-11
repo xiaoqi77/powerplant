@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8;IE=8"/>
+    <meta http-equiv="Cache-control" content="max-age=36000">
+    <title>工业云管理系统</title>
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+
+    <script>
+        var cookie = getCookie("userInfo");
+        if (cookie == null) {
+            location.href = "login.html";
+        }
+    </script>
+</head>
+<frameset rows="88,*" cols="*" frameborder="no" border="0" framespacing="0">
+    <frame src="top.html"  scrolling="No" noresize="noresize" title="topFrame"/>
+    <frameset cols="*" frameborder="no" border="0" framespacing="0" id="contentFrameset">
+        <frame src="factoryList.html" />
+    </frameset>
+    <!--<frame src="footer.html" name="bottomFrame" scrolling="No" noresize="noresize" id="bottomFrame"-->
+           <!--title="bottomFrame"/>-->
+</frameset>
+<noframes>
+    <body>
+    </body>
+</noframes>
+</html>

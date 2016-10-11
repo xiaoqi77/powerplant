@@ -1,0 +1,325 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>无标题文档</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <!--<script language="JavaScript" src="js/json2.js"></script>-->
+    <script language="JavaScript" src="js/common.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+//            menuList();
+            //导航切换
+            $(".menuson .header").click(function () {
+                var $parent = $(this).parent();
+                $(".menuson>li.active").not($parent).removeClass("active open").find('.sub-menus').hide();
+
+                $parent.addClass("active");
+                if (!!$(this).next('.sub-menus').size()) {
+                    if ($parent.hasClass("open")) {
+                        $parent.removeClass("open").find('.sub-menus').hide();
+                    } else {
+                        $parent.addClass("open").find('.sub-menus').show();
+                    }
+                }
+            });
+            // 三级菜单点击
+            $('.sub-menus li').click(function (e) {
+                $(".sub-menus li.active").removeClass("active")
+                $(this).addClass("active");
+            });
+            $('.title').click(function () {
+                var $ul = $(this).next('ul');
+                $('dd').find('.menuson').slideUp();
+                if ($ul.is(':visible')) {
+                    $(this).next('.menuson').slideUp();
+                } else {
+                    $(this).next('.menuson').slideDown();
+                }
+            });
+            $(".emissionMenu").click(function(){
+                setCookie("emissionMenu",$(this).text());
+            });
+            //数据监测和数据分析添加子菜单
+            function menuList(){
+                var responseObj = JSON.parse(polusourcedistkey("family"));
+                if(responseObj.errCode == "success" || responseObj.total !=0) {
+                    var familyList = responseObj.resultList;
+                    for (var j in familyList) {
+                        var family = familyList[j]["family"];
+                        $("#dataMonitorMenu").append("<li><div class='header' id='"+family+"'> " +
+                                "<cite></cite> " +
+                                "<a href='dataMonitor/datamonitor.html' target='rightFrame'>"+family+"监测</a> " +
+                                "<i></i></div></li>");
+                        $("#datanalysisMenu").append("<li><div class='header' id='"+family+"'> " +
+                                "<cite></cite> " +
+                                "<a href='dataAnalysis/dataAnalysis.html' target='rightFrame'>"+family+"减排分析</a> " +
+                                "<i></i></div></li>");
+                        $(document).on("click","#"+family,function(){
+                            var id = $(this).attr("id");
+                            setCookie("monitorMenu",id);
+                        });
+                    }
+                }
+            }
+        });
+        function verticaluser(){
+            var cookieInfo = getCookie("userInfo"); //获取cookie信息
+            var cookieObject = JSON.parse(cookieInfo);
+            var userInfo = cookieObject.account;
+            if(userInfo.type == "common"){
+                $(".accountMan").css("display","none");
+            }
+        }
+    </script>
+</head>
+
+<body style="background:#f0f9fd;" onload="">
+<div class="lefttop"><span></span>系统管理</div>
+
+<dl class="leftmenu">
+
+    <dd>
+        <div class="title">
+            <span><img src="images/leftico02.min.png"/></span>综合监测
+        </div>
+        <ul class="menuson">
+            <li class="active">
+                <div class="header">
+                    <cite></cite>
+                    <a href="comprehensiveMonitor/factoryMonitor.html" target="rightFrame">厂区检测</a>
+                    <i></i>
+                </div>
+            </li>
+        </ul>
+    </dd>
+    <dd>
+        <div class="title">
+            <span><img src="images/leftico02.min.png"/></span>数据导入
+        </div>
+        <ul class="menuson">
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/mudInImport.html" target="rightFrame">污泥入库</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/mudoutImport.html" target="rightFrame">污泥出库</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/fuelInImport.html" target="rightFrame">燃料棒入库</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/fueloutImport.html" target="rightFrame">燃料棒出库</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/electricImport.html" target="rightFrame">发电量</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="dataImport/waterImport.html" target="rightFrame">用水量</a>
+                    <i></i>
+                </div>
+            </li>
+        </ul>
+    </dd>
+    <dd>
+        <div class="title">
+            <span><img src="images/leftico02.min.png"/></span>电厂数据管理
+        </div>
+        <ul class="menuson">
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="plantsDataManager/mudStockManager.html" target="rightFrame">污泥</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="plantsDataManager/fuelStockManager.html" target="rightFrame">燃料棒</a>
+                    <i></i>
+                </div>
+            </li>
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="plantsDataManager/materialsDataManager.html" target="rightFrame">辅料</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="plantsDataManager/electricDataManager.html" target="rightFrame">发电量</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="plantsDataManager/wastewaterDataManager.html" target="rightFrame">用水量</a>
+                    <i></i>
+                </div>
+            </li>
+        </ul>
+    </dd>
+    <dd>
+        <div class="title" id="dataManaMenu">
+            <span><img src="images/leftico02.min.png"/></span>排放数据管理
+        </div>
+        <ul class="menuson">
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="emissionDataManager/pharmacistData.html" target="rightFrame">药剂</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">SO2</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">NOX</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">O2</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">温度</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">压力</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="emissionDataManager/emissionDataManager.html" class="emissionMenu" target="rightFrame">流量</a>
+                    <i></i>
+                </div>
+            </li>
+        </ul>
+    </dd>
+    <dd>
+        <div class="title"><span><img src="images/leftico03.min.png"/></span>综合分析</div>
+        <ul class="menuson">
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="comprehensiveAnalysis/eeAnalysis.html" target="rightFrame">能效分析</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="comprehensiveAnalysis/mudAndemissionAnalysis.html" target="rightFrame">污泥与排放指标对比分析</a>
+                    <i></i>
+                </div>
+            </li>
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="comprehensiveAnalysis/emissionAndPurAnalysis.html" target="rightFrame">排放净化效果分析</a>
+                    <i></i>
+                </div>
+            </li>
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="comprehensiveAnalysis/medicamentAnalysis.html" target="rightFrame">药剂使用效率分析</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+        </ul>
+    </dd>
+    <dd class ="accountMan">
+        <div class="title">
+            <span><img src="images/leftico02.min.png"/></span>账户管理
+        </div>
+        <ul class="menuson">
+            <li>
+                <div class="header">
+                    <cite></cite>
+                    <a href="user/userManagerment.html" target="rightFrame">账户管理</a>
+                    <i></i>
+                </div>
+            </li>
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="user/stockRoster.html" target="rightFrame">库存管理</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="dataImport/fuelDataImport.html" target="rightFrame">燃料库存导入管理</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="dataImport/mudInDataImport.html" target="rightFrame">污泥入库导入管理</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<div class="header">-->
+                    <!--<cite></cite>-->
+                    <!--<a href="dataImport/mudoutDataImport.html" target="rightFrame">污泥出库导入管理</a>-->
+                    <!--<i></i>-->
+                <!--</div>-->
+            <!--</li>-->
+        </ul>
+    </dd>
+</dl>
+</body>
+<script>
+    verticaluser();
+</script>
+</html>

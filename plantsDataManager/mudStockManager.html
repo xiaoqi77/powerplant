@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../css/laydate.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/laydateskins.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <!--表的分页排序-->
+    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" src="../js/laydate.js"></script>
+    <!--<script type="text/javascript" src="../js/highcharts-more.js"></script>-->
+    <!--<script type="text/javascript" src="../js/exporting.js"></script>-->
+    <script type="text/javascript" src="../js/highstock.js"></script>
+
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/mudStockManager.js"></script>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">电厂数据管理</a></li>
+        <li><a href="#">污泥数据管理</a></li>
+    </ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <ul class="toolbar1">
+            <li>
+                <!--<select class="searchType righttoolbar" id="searchType">-->
+                    <!--<option value="day">天</option>-->
+                    <!--<option value="month">月</option>-->
+                    <!--<option value="year">年</option>-->
+                <!--</select>-->
+                <select class="searchType righttoolbar" id="mudDirect">
+                    <option value="in">入库</option>
+                    <option value="out">出库</option>
+                </select>
+                <input placeholder="起始时间" class="scinput laydate-icon" id="starthour">
+                <input placeholder="结束时间" class="scinput laydate-icon" id="endhour">
+                <img class="searchpng" id="searchpng" src="../images/ico06.min.png"/>
+            </li>
+        </ul>
+        <ul>
+            <!--<li><a href=" #" class="tablelink">最近一周</a></li>-->
+        </ul>
+    </div>
+
+    <div class="mudStockTableShow">
+        <div style="overflow: hidden;float: right;margin-right: 40px;">
+            <ul class="toolbar1">
+                <li><a href="#" class="tablelink" id="week">最近一周 |</a></li>
+                <li><a href="#" class="tablelink" id="month">最近一月 |</a></li>
+                <li><a href="#" class="tablelink" id="quarter">最近三月</a></li>
+            </ul>
+        </div>
+        <table class="tablelist mudStockTable sortable" id="mudStockTable">
+            <thead>
+                <tr>
+                    <th class="nosort" style="display: none"></th>
+                    <th style='width: 6%'><h3>序号</h3><!--<span class="sortpng sortboth"></span><i class="sort"><img src="../images/arrows.png"/></i>--></th>
+                    <th><h3>污泥产生单位</h3></th>
+                    <th><h3>单位编号</h3></th>
+                    <!--<th><h3>时间</h3></th>-->
+                    <th><h3>共接收(吨)</h3></th>
+                    <th><h3>操作</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="controls">
+            <div id="perpage">
+                <span>每页显示</span>
+                <select onchange="sorter.size(this.value)">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span>页</span>
+            </div>
+            <div id="navigation">
+                <img src="../images/first.gif" width="16" height="16" alt="首页" onclick="sorter.move(-1,true)" />
+                <img src="../images/previous.gif" width="16" height="16" alt="上一页" onclick="sorter.move(-1)" />
+                <img src="../images/next.gif" width="16" height="16" alt="下一页" onclick="sorter.move(1)" />
+                <img src="../images/last.gif" width="16" height="16" alt="末页" onclick="sorter.move(1,true)" />
+            </div>
+            <div id="text">第<span id="currentpage"></span> 页/共<span id="pagelimit"></span>页</div>
+        </div>
+        <div style="width: 100%;padding-top: 20px;">
+            <div style="display: inline;overflow: hidden;">
+                <span>该时间段共接收：<label id="inStockTotal">0</label>吨</span>
+                <span>该时间段共提取：<label id="outStockTotal">0</label>吨</span>
+                <span>总库存余量：<label id="StockTotal">0</label>吨</span>
+            </div>
+            <!--<div id="sludgecontainer" style=" height: 300px;margin: 0 auto;float: right;width: 85%"></div>-->
+            <table style="display: inline;text-align: center;width: 85%;overflow: hidden;">
+                <tr>
+                    <td>
+                        <div id="sludgecontainer" style=" height: 300px;margin: 0 auto;width: 95%"></div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="mudInDetailTableShow">
+        <label>污泥产生单位：</label><label id="mudInUnit"></label>
+        <table class="tablelist mudDetailInStockTable sortable" id="mudDetailInStockTable">
+            <thead>
+                <tr>
+                    <th class="nosort" style="display: none"></th>
+                    <th style='width: 6%'><h3>序号</h3><!--<span class="sortpng sortboth"></span><i class="sort"><img src="../images/arrows.png"/></i>--></th>
+                    <th><h3>编号</h3></th>
+                    <th><h3>净重(吨)</h3></th>
+                    <th><h3>毛重(吨)</h3></th>
+                    <th><h3>皮重(吨)</h3></th>
+                    <th><h3>车号</h3></th>
+                    <th><h3>时间</h3></th>
+                    <th><h3>负责人</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="controls">
+            <div class="perpage">
+                <span>每页显示</span>
+                <select onchange="sorter.size(this.value)">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span>页</span>
+            </div>
+            <div class="navigation">
+                <img src="../images/first.gif" width="16" height="16" alt="首页" onclick="sorter.move(-1,true)" />
+                <img src="../images/previous.gif" width="16" height="16" alt="上一页" onclick="sorter.move(-1)" />
+                <img src="../images/next.gif" width="16" height="16" alt="下一页" onclick="sorter.move(1)" />
+                <img src="../images/last.gif" width="16" height="16" alt="末页" onclick="sorter.move(1,true)" />
+            </div>
+            <div class="pagetext">第<span id="detailIncurrentpage"></span> 页/共<span id="detailInpagelimit"></span>页</div>
+        </div>
+        <div>
+            <div style="float: left;padding-top: 20px;">
+                <span>该时间段共接收：<label id="detailInStockTotal"></label>吨</span>
+            </div>
+            <div style="float: right;padding-top: 20px;">
+                <a href="#" class="tablelink backMudStock"> 返回</a>
+            </div>
+        </div>
+    </div>
+    <div class="mudOutDetailTableShow">
+        <table class="tablelist mudDetailOutStockTable sortable" id="mudDetailOutStockTable">
+            <thead>
+                <tr>
+                    <th class="nosort" style="display: none"></th>
+                    <th style='width: 6%'><h3>序号</h3><!--<span class="sortpng sortboth"></span><i class="sort"><img src="../images/arrows.png"/></i>--></th>
+                    <th><h3>提取(吨)</h3></th>
+                    <th><h3>库房编号</h3></th>
+                    <th><h3>时间</h3></th>
+                    <th><h3>班组</h3></th>
+                    <th><h3>负责人</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="controls">
+            <div class="perpage">
+                <span>每页显示</span>
+                <select onchange="sorter.size(this.value)">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span>页</span>
+            </div>
+            <div class="navigation">
+                <img src="../images/first.gif" width="16" height="16" alt="首页" onclick="sorter.move(-1,true)" />
+                <img src="../images/previous.gif" width="16" height="16" alt="上一页" onclick="sorter.move(-1)" />
+                <img src="../images/next.gif" width="16" height="16" alt="下一页" onclick="sorter.move(1)" />
+                <img src="../images/last.gif" width="16" height="16" alt="末页" onclick="sorter.move(1,true)" />
+            </div>
+            <div class="pagetext">第<span id="detailOutcurrentpage"></span> 页/共<span id="detailOutpagelimit"></span>页</div>
+        </div>
+        <div>
+            <div style="float: left;padding-top: 20px;">
+                <span>该时间段共提取：<label id="detailOutStockTotal"></label>吨</span>
+            </div>
+            <div style="float: right;padding-top: 20px;">
+                <a href="#" class="tablelink backMudStock"> 返回</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

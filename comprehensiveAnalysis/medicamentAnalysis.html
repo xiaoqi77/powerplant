@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+    <!--<link href="../css/select.css" rel="stylesheet" type="text/css" />-->
+    <link href="../css/laydate.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/laydateskins.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/highstock.js"></script>
+    <!--<script type="text/javascript" src="../js/highcharts-more.min.js"></script>-->
+    <!--<script type="text/javascript" src="../js/exporting.min.js"></script>-->
+    <script type="text/javascript" src="../js/laydate.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/medicamentAnalysis.js"></script>
+</head>
+
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="indicatorList.html">综合分析</a></li>
+        <li><a href="#" id="currentPageTitle">药剂使用效率分析</a></li>
+    </ul>
+</div>
+<div class="formbody"style="font-size: large">
+    <span>药剂使用分析是通过分析药剂使用量与排放净化效果之间的关系，为药剂的投放和高效使用提供决策。</span>
+    <span>计算模型：每100mg/m3的净化所耗药剂量= 药剂使用量/(入口浓度 - 出口浓度)</span>
+</div>
+<div class="formbody">
+    <!--<ul class="toolbar">-->
+        <!--<li class="checkDetail" id="linechart"><span><img src="../images/t01.min.png"/></span>曲线图</li>-->
+        <!--<li class="checkDetail" id="columnchart"><span><img src="../images/t01.min.png"/></span>柱状图</li>-->
+    <!--</ul>-->
+    <div class="tools">
+        <ul class="toolbar1">
+            <li>
+                <input placeholder="起始时间" class="scinput laydate-icon" id="starthour">
+                <input placeholder="结束时间" class="scinput laydate-icon" id="endhour">
+                <img class="searchpng" id="searchpng" src="../images/ico06.min.png"/>
+            </li>
+        </ul>
+    </div>
+    <div style="overflow: hidden;float: right;margin-right: 40px;">
+        <ul class="toolbar1">
+            <li><a href="#" class="tablelink" id="week">最近一周 |</a></li>
+            <li><a href="#" class="tablelink" id="month">最近一月 |</a></li>
+            <li><a href="#" class="tablelink" id="quarter">最近三月</a></li>
+        </ul>
+    </div>
+    <div id="perElectricContainer" style=" height: 400px;width: 90%; margin: 0 auto;clear: both;">
+    </div>
+    <!--<div id="useContainer" style=" height: 400px;width: 50%; margin: 0 auto;clear: both;">-->
+    <!--</div>-->
+    <!--<div id="electricContainer" style=" height: 400px;width: 50%; margin: 0 auto;clear: both;">-->
+    <!--</div>-->
+</div>
+<!--tip-->
+<div id="tip" title="" style="display: none">
+    <div class="tipinfo">
+        <span><img src="../images/ticon.min.png" /></span>
+        <div class="tipright">
+            <p></p>
+            <!--<cite>如果是请点击确定按钮 ，否则请点取消。</cite>-->
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

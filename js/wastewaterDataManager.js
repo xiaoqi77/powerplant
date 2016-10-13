@@ -3,7 +3,7 @@
  */
 
 $(function(){
-    var formate = "YYYY/MM/DD",firstdate,enddate,stockInfoId = getStockId("water");
+    var formate = "YYYY/MM/DD",firstdate,enddate,devId = getCookie("deviceId");
     $("#starthour").click(function(){
         laydate(setFirstLaydate(true,firstdate,laydate.now(0),formate));
     });
@@ -47,48 +47,52 @@ $(function(){
     listData();
     //查询库存数据
     function listData(){
-        var electricParm = new Object(),page_object = new Object(),find = new Object(),
+        var other_object = new Object(),page_object = new Object(),find = new Object(),
             timeParm = new Object(),sort = new Object();
         timeParm.start = (new Date(firstdate +" 0:0:0")).getTime();
         timeParm.end = (new Date(enddate +" 0:0:0")).getTime();
         timeParm.scale = "day";
         page_object.max="2000";
         page_object.start="0";
-        find.dataId = stockInfoId;
         find.time = timeParm;
-        sort.desc = "time";
-        electricParm.page = page_object;
-        electricParm.find = find;
-        electricParm.sort = sort;
-        //var responsedata = JSON.parse(listImportData("water",electricParm));
+        sort.desc = "day";
+        other_object.sort = sort;
         $(".importTable tbody").empty();
         $(".importTable tbody").html("");
-        //查询库存余量
-        var responsedata = JSON.parse(storageList("history",electricParm))
-            ,invaluePointArray = new Array(),totalNum = 0,length = 0;
-        //当返回状态是success的时候才去填充表数据
-        if (responsedata.errCode == "success") {
-            var datas = responsedata.resultList,startTime = ((new Date(firstdate +" 0:0:0")).getTime());
-            for (var i = 0; i < datas.length; i++) {
-                var stock = datas[i]["stock"] == undefined ? 0 : (datas[i]["stock"]),
-                    time = datas[i]["time"] == undefined ? 0 : datas[i]["time"],
-                    outNum = datas[i]["out"] == undefined ? 0 : datas[i]["out"];
-                length++;
-                $(".importTable tbody").append("<tr id='org_" + length + "'>" +
-                    "<td style='display: none'></td>" +//id
-                    "<td>" + length + "</td>" +
-                    "<td>" + dataFormate(time, "yyyy/MM/dd") + "</td>" +
-                    "<td>" + (-outNum) + "</td>" +
-                    "<td>" + stock + "</td>" +
-                    "</tr>");
-                var invaluePoint = new Array();
-                invaluePoint.push(time);
-                invaluePoint.push(-outNum);
-                invaluePointArray.push(invaluePoint);
-                totalNum += (-outNum);
+        find.devId = devId;
+        find.family = "用水量";
+        find.name = "用水量";
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object)),valuePointArray = new Array(),
+            invaluePointArray = new Array(),totalNum = 0,length = 0;
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    length++;
+                    $(".importTable tbody").append("<tr id='org_" + length + "'>" +
+                        "<td style='display: none'></td>" +//id
+                        "<td>" + length + "</td>" +
+                        "<td>" + dataFormate(time, "yyyy/MM/dd") + "</td>" +
+                        "<td>" + inNum + "</td>" +
+                        "<td>" + stock + "</td>" +
+                        "</tr>");
+                    var invaluePoint = new Array();
+                    invaluePoint.push(time);
+                    invaluePoint.push(inNum);
+                    invaluePointArray.push(invaluePoint);
+                    totalNum += inNum;
+                }
+                sorter.init("importTable",1);
+                $("#StockTotal").text(totalNum);
             }
-            sorter.init("importTable",1);
-            $("#StockTotal").text(totalNum);
         }
         invaluePointArray.sort(function(a,b){
             return b[0] - a[0];

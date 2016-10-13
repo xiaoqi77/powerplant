@@ -81,35 +81,69 @@ $(function(){
                 timeList[date].push(datas[i]);
             }
         }
-        //获取发电量数据
-        var elstockId = getStockId("electric");
-        var elParm = new Object(),find = new Object();
-        timeParm.start = timeParm.start - 24*60*60*1000;
-        find.time = timeParm;
-        elParm.page = page_object;
-        find.dataId = elstockId;
-        elParm.find = find;
-        var responsedata = JSON.parse(storageList("history",elParm));
-        if(responsedata.errCode == "success"){
-            var datas = responsedata.resultList,oldNum = 0,startTime = (new Date(firstdate + " 0:0:0")).getTime();
-            for (var i = 0; i < datas.length; i++) {
-                var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
-                    time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
-                    date = datas[i]["date"] == undefined ? "" : datas[i]["date"];
-                datas[i]["type"] = "electric";
-
-                if(time < startTime){
-                    oldNum = stock;
-                    continue;
+        var other_object = new Object(),sort = new Object(),devId = getCookie("deviceId");
+        sort.desc = "day";
+        other_object.sort = sort;
+        //var responsedata = JSON.parse(listImportData("electric",electricParm));
+        $(".importTable tbody").empty();
+        $(".importTable tbody").html("");
+        find.devId = devId;
+        find.family = "发电量";
+        find.name = "发电量";
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object));
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    if(timeList[date] == undefined){
+                        timeList[date] = new Array();
+                    }
+                    var invaluePoint = new Object();
+                    invaluePoint["time"] = time;
+                    invaluePoint["out"] = inNum;
+                    invaluePoint["stock"] = stock;
+                    invaluePoint["type"] = "electric";
+                    timeList[date].push(invaluePoint);
                 }
-                if(timeList[date] == undefined){
-                    timeList[date] = new Array();
-                }
-                datas[i]["stock"] = stock - oldNum;
-                timeList[date].push(datas[i]);
-                oldNum = stock;
             }
         }
+        //获取发电量数据
+        //var elstockId = getStockId("electric");
+        //var elParm = new Object(),find = new Object();
+        //timeParm.start = timeParm.start - 24*60*60*1000;
+        //find.time = timeParm;
+        //elParm.page = page_object;
+        //find.dataId = elstockId;
+        //elParm.find = find;
+        //var responsedata = JSON.parse(storageList("history",elParm));
+        //if(responsedata.errCode == "success"){
+        //    var datas = responsedata.resultList,oldNum = 0,startTime = (new Date(firstdate + " 0:0:0")).getTime();
+        //    for (var i = 0; i < datas.length; i++) {
+        //        var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
+        //            time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
+        //            date = datas[i]["date"] == undefined ? "" : datas[i]["date"];
+        //        datas[i]["type"] = "electric";
+        //
+        //        if(time < startTime){
+        //            oldNum = stock;
+        //            continue;
+        //        }
+        //        if(timeList[date] == undefined){
+        //            timeList[date] = new Array();
+        //        }
+        //        datas[i]["stock"] = stock - oldNum;
+        //        timeList[date].push(datas[i]);
+        //        oldNum = stock;
+        //    }
+        //}
         //处理数据
         var valuePointArray = new Array(),mudValueArray = new Array(),electricValueArray = new Array();
         for(var date in timeList){
@@ -128,9 +162,9 @@ $(function(){
                     mudPoint.push(inNum);
                     mudValueArray.push(mudPoint);
                 }else{
-                    elecValue = stock;
+                    elecValue = inNum;
                     elecPoint.push(time);
-                    elecPoint.push(stock);
+                    elecPoint.push(inNum);
                     electricValueArray.push(elecPoint);
                 }
             }

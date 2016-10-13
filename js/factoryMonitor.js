@@ -46,6 +46,7 @@ $(function(){
     family = $("#emissionType option:selected").val();
     var year = nowDate.getFullYear(), month = nowDate.getMonth()+1, day = nowDate.getDate();
     dayEnd = new Date(year+"/"+month+"/"+day);
+    var devId = getCookie("deviceId");
     initWindow();
     tabsInitMudTable("in",true);
     tabsInitFuelTable("in",true);
@@ -667,7 +668,6 @@ $(function(){
      * @param isFirst
      */
     function historyData(isFirst){
-        var devId = getCookie("deviceId");
         var page_object = new Object(),findBy = new Object(),other_object = new Object();
         page_object.max="2000";
         page_object.start="0";
@@ -678,12 +678,13 @@ $(function(){
         other_object.sort = sort;
 
         var time = new Object();
-        if(family == "发电量" || family == "用水量"){
-            time.scale = "all";
-            datanow(findBy,page_object,other_object);
-        }else{
-            time.scale = "day";
-        }
+        //if(family == "发电量" || family == "用水量"){
+        //    time.scale = "hour";
+        //    datanow(findBy,page_object,other_object);
+        //}else{
+        //
+        //}
+        time.scale = "day";
         findBy.family = family;
         findBy.name = family;
 
@@ -720,19 +721,21 @@ $(function(){
             var resultList = historyDatasObject.resultList;
             //获取所有结果数据
             for(var i in resultList){
-                for(var j in resultList[i]){
-                    var dayResult = resultList[i]["dayResult"];
-                    var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
-                        substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
-                        time = (new Date(substrTime)).getTime();
-                    for(var k in dayResult) {
-                        var item = dayResult[k];
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    if(family == "发电量" || family == "用水量"){
+                        var indicatorValue = item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"];
+                    }else{
                         var indicatorValue = item["values"][0]["avg"]== undefined ? 0 : item["values"][0]["avg"];
-                        var point = new Array();
-                        point.push(time);
-                        point.push(Number(indicatorValue));
-                        valuePointArray.push(point);
                     }
+                    var point = new Array();
+                    point.push(time);
+                    point.push(Number(indicatorValue));
+                    valuePointArray.push(point);
                 }
             }
         }

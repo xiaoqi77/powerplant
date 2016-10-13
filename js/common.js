@@ -219,8 +219,8 @@ function login(userName,password) {
         accessId = userInfo.accessId;
         setCookie("userInfo",JSON.stringify(userInfo));
         if(userInfo["account"]["type"] == "common" || userInfo["account"]["type"] == "admin"){
-            setCookie("orgId",JSON.stringify(userInfo["account"]["orgId"]));
-            setCookie("orgName",JSON.stringify(userInfo["account"]["org"]));
+            setCookie("orgId",userInfo["account"]["orgId"]);
+            setCookie("orgName",userInfo["account"]["org"]);
             var deviceParam = new Object();
             deviceParam.org = userInfo["account"]["org"];
             deviceParam.orgId = userInfo["account"]["orgId"];

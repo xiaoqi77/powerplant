@@ -552,100 +552,112 @@ $(function(){
      * 发电量综合数据检测
      */
     function tabsInitElectricTable(tabType,isFirst){
-        var elParm = new Object(),page_object = new Object(),find = new Object(),
-            daytime = new Object();
+        var other_object = new Object(),page_object = new Object(),find = new Object(),
+            daytime = new Object(),sort = new Object(),devId = getCookie("deviceId"),family = "",unit="";
         page_object.max="2000";
         page_object.start="0";
         daytime.scale = "day";
-        elParm.page = page_object;
+        sort.asc = "day";
+        other_object.sort = sort;
         if(tabType == "electric"){
-            var elstockId = getStockId("electric");
-            find.dataId = elstockId;
+            family = "发电量";
+            unit="kkwh"
         }else{
-            var waterstockId = getStockId("water");
-            find.dataId = waterstockId;
+            family = "用水量";
+            unit="吨"
         }
+        find.devId = devId;
+        find.family = family;
+        find.name = family;
+
         //当月接收数据
         daytime.start = (new Date(year+"/"+month+"/01")).getTime();
         daytime.end = nowDate.getTime();
         find.time = daytime;
-        elParm.find = find;
-        var responsedata = JSON.parse(storageList("history",elParm)),
-            montheldataTotal = 0;
-        if (responsedata.errCode == "success") {
-            var datas = responsedata.resultList;
-            //for (var i = 0; i < datas.length; i++) {
-            //    var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
-            //        time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
-            //        inNum = datas[i]["in"] == undefined ? 0 : datas[i]["in"];
-            //    montheldataTotal = montheldataTotal.add(inNum);
-            //}
-            montheldataTotal = datas[datas.length-1]["stock"] - datas[0]["stock"];
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object)),montheldataTotal = 0;
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    montheldataTotal += inNum;
+                }
+            }
+            var currentTotal = Number(resultList[resultList.length-1]["dayResult"][0]["values"][0]["max"]);
+            $("#elNowStock").html("<label>"+family +"：</label>"
+                + "<label  style='color: red;font-size: 20px;'>"+currentTotal+unit+"</label>");
         }
         //当年接收数据
         daytime.start = (new Date(year+"/01/01")).getTime();
         daytime.end = nowDate.getTime();
         find.time = daytime;
-        elParm.find = find;
-        var responsedata = JSON.parse(storageList("history",elParm)),
-            yeareldataTotal = 0;
-        if (responsedata.errCode == "success") {
-            var datas = responsedata.resultList;
-            //for (var i = 0; i < datas.length; i++) {
-            //    var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
-            //        time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
-            //        inNum = datas[i]["in"] == undefined ? 0 : datas[i]["in"];
-            //    yeareldataTotal = yeareldataTotal.add(inNum);
-            //}
-            yeareldataTotal = datas[datas.length-1]["stock"] - datas[0]["stock"];
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object)),yeareldataTotal = 0;
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    yeareldataTotal += inNum;
+                }
+            }
         }
         //上月同期消耗数据
         daytime.start = (new Date(year+"/"+(month-1)+"/01")).getTime();
         daytime.end = dayEnd.getTime()- 24*60*60*1000*30;
         find.time = daytime;
-        elParm.find = find;
-        var responsedata = JSON.parse(storageList("history",elParm)),
-            monthwaterTotal = 0;
-        if (responsedata.errCode == "success") {
-            var datas = responsedata.resultList;
-            //for (var i = 0; i < datas.length; i++) {
-            //    var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
-            //        time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
-            //        outNum = datas[i]["out"] == undefined ? 0 : datas[i]["out"];
-            //    monthwaterTotal = monthwaterTotal.add(outNum);
-            //}
-            monthwaterTotal = datas[datas.length-1]["stock"] - datas[0]["stock"];
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object)),monthwaterTotal = 0;
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    monthwaterTotal += inNum;
+                }
+            }
         }
         //去年同期消耗数据
         daytime.start = (new Date((year-1)+"/01"+"/01")).getTime();
         daytime.end = (new Date((year-1)+"/"+month+"/"+day)).getTime();
         find.time = daytime;
-        elParm.find = find;
-        var responsedata = JSON.parse(storageList("history",elParm)),
-            yearwaterTotal = 0;
-        if (responsedata.errCode == "success") {
-            var datas = responsedata.resultList;
-            //for (var i = 0; i < datas.length; i++) {
-            //    var stock = datas[i]["stock"] == undefined ? "" : datas[i]["stock"],
-            //        time = datas[i]["time"] == undefined ? "" : datas[i]["time"],
-            //        outNum = datas[i]["out"] == undefined ? 0 : datas[i]["out"];
-            //    yearwaterTotal = yearwaterTotal.add(outNum);
-            //}
-            yearwaterTotal = datas[datas.length-1]["stock"] - datas[0]["stock"];
-        }
-        if(isFirst){
-            var storageParam = new Object(),sFind = new Object();
-            sFind.dataId = elstockId;
-            storageParam.find = sFind;
-            storageParam.page = page_object;
-            //查询库存余量
-            var responsedata = JSON.parse(storageList("now",storageParam));
-            //当返回状态是success的时候才去填充表数据
-            if (responsedata.errCode == "success") {
-                var datas = responsedata.resultList;
-                $("#elNowStock").text(datas[datas.length-1]["stock"]+" kkwh");
+        var historyDatasObject = JSON.parse(datahistory(find,page_object,other_object)),yearwaterTotal = 0;
+        if(historyDatasObject.errCode == "success" && historyDatasObject.total != 0){
+            var resultList = historyDatasObject.resultList;
+            //获取所有结果数据
+            for(var i in resultList){
+                var dayResult = resultList[i]["dayResult"];
+                var date = resultList[i]["day"] == undefined?"":resultList[i]["day"],
+                    substrTime = date.substring(0, 4) + "/" + date.substring(4, 6) + "/" + date.substring(6, 8),
+                    time = (new Date(substrTime)).getTime();
+                for(var k in dayResult) {
+                    var item = dayResult[k];
+                    var inNum = Number(item["values"][0]["dif"]== undefined ? 0 : item["values"][0]["dif"]),
+                        stock = Number(item["values"][0]["max"]== undefined ? 0 : item["values"][0]["max"]);
+                    yearwaterTotal += inNum;
+                }
             }
         }
+
         if(tabType == "water"){
             montheldataTotal = montheldataTotal+"吨";
             monthwaterTotal = monthwaterTotal+"吨";
